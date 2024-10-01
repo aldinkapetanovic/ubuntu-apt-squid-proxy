@@ -1,0 +1,42 @@
+# version: '3.8'
+
+services:
+  # squid:
+  #   image: ubuntu/squid
+  #   ports:
+  #     - "3128:3128"
+  #   volumes:
+  #     - squid_cache:/var/spool/squid
+  #   restart: always
+
+  squid:
+    image: ubuntu/squid
+    ports:
+      - "3128:3128"
+    volumes:
+      - squid_cache:/var/spool/squid
+      - ./squid-config/squid.conf:/etc/squid/squid.conf  # Mount custom config
+    restart: always
+
+  ubuntu:
+    image: ubuntu:latest
+    depends_on:
+      - squid
+    # environment:
+      # - http_proxy=http://squid:3128
+      # - https_proxy=http://squid:3128
+    tty: true
+    stdin_open: true
+    command: bash
+    volumes:
+      - ./apt.conf:/etc/apt/apt.conf  # Mount apt proxy config
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "8080:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf  # Mount custom Nginx config
+
+volumes:
+  squid_cache:
