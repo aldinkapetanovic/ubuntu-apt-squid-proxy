@@ -1,33 +1,35 @@
-# Start the whole thing
+# Proxy apt traffic via squid
+
+## Start the whole thing
 
 ```sh
 cd ubuntu-apt-proxy-squid
 docker compose up -d
 ```
 
-# Access the running ``ubuntu`` container
+## Check logs on ``squid`` container
+
+From ``your terminal``, 
+
+```sh
+docker compose logs squid -f
+```
+
+## Access the running ``ubuntu`` container
 
 ```sh
 docker compose exec ubuntu bash
 ```
 
-# Install packages
+### Install packages on ``ubuntu`` container
 
 ```sh
 apt update
 apt install iputils-ping telnet curl iproute2
 ```
-<!-- 
-```sh
-echo 'Acquire::http::Proxy "http://squid:3128/";' > /etc/apt/apt.conf.d/99proxy
-echo 'Acquire::https::Proxy "http://squid:3128/";' >> /etc/apt/apt.conf.d/99proxy
-``` -->
 
-# Test from ``ubuntu`` container
+### Test from ``ubuntu`` container
 
-```sh
-apt update
-```
 ```sh
 curl http://nginx
 ```
@@ -36,23 +38,28 @@ curl http://nginx
 ip -br -c a
 ```
 
-# Stop ``squid`` container
+## Test2
+From ``your web browser`` open nginx container
+
+http://localhost:8080
+
+
+## Stop ``squid`` container
 From ``your terminal``
 
 ```sh
 docker compose stop squid
 ```
 
-# Test2
-From ``your machine`` open nginx container
-
-http://localhost:8080
-
-
-# Check logs on ``squid`` container
-
-From ``your terminal``, 
+## Check that proxy for apt is not working on ``ubuntu`` container
 
 ```sh
-docker compose logs squid -f
+apt update
+ping google.com
 ```
+
+<!-- 
+```sh
+echo 'Acquire::http::Proxy "http://squid:3128/";' > /etc/apt/apt.conf.d/99proxy
+echo 'Acquire::https::Proxy "http://squid:3128/";' >> /etc/apt/apt.conf.d/99proxy
+``` -->
