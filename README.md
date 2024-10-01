@@ -1,3 +1,9 @@
+# Access the running ubuntu container
+
+```sh
+docker compose exec ubuntu bash
+```
+
 # Install packages
 
 ```sh
