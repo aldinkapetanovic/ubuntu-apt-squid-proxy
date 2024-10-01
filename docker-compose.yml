@@ -15,7 +15,7 @@ services:
       - "3128:3128"
     volumes:
       - squid_cache:/var/spool/squid
-      - ./squid-config/squid.conf:/etc/squid/squid.conf  # Mount custom config
+      - ./squid.conf:/etc/squid/squid.conf  # Mount custom config
     restart: always
 
   ubuntu:
